@@ -54,11 +54,37 @@ def drawO(x, y):
                 gBoard[i + yOffset][j + xOffset] = "o"
     return   
     
-def main():
+def playGame():
+    gIsPlayerOneChance = True
     initializeBoard(3 * (CELL_SIZE + 1) + 1)
-    drawX(3, 3)
-    drawO(3, 2)
     printBoard()
+    while(True):
+        if (gIsPlayerOneChance == True):
+            print "Player 1's Turn."
+            location = raw_input("Enter location To Place X e.g: 1, 1: ")
+            if location == "end":
+                break
+            x = int(location.split(",")[0])
+            y = int(location.split(",")[1])
+            drawX(x, y)
+            gIsPlayerOneChance = False
+        else:
+            print "Player 1's Turn."
+            location = raw_input("Enter location To Place O e.g: 1, 1: ")
+            if location == "end":
+                break
+            x = int(location.split(",")[0])
+            y = int(location.split(",")[1])
+            drawO(x, y)
+            gIsPlayerOneChance = True
+        printBoard()
+    print "\nGame Over!"
+    playAgain = raw_input("Play again y/n?: ")
+    if (playAgain == "y"):
+        playGame()
+    
+def main():
+    playGame()
     
 if __name__ == "__main__":
     main()
