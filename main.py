@@ -55,28 +55,40 @@ def drawO(x, y):
     return   
     
 def playGame():
-    gIsPlayerOneChance = True
+    isPlayerOneChance = True
     initializeBoard(3 * (CELL_SIZE + 1) + 1)
     printBoard()
     while(True):
-        if (gIsPlayerOneChance == True):
+        if (isPlayerOneChance == True):
             print "Player 1's Turn."
             location = raw_input("Enter location To Place X e.g: 1, 1: ")
             if location == "end":
                 break
-            x = int(location.split(",")[0])
-            y = int(location.split(",")[1])
+            try:
+                x = int(location.split(",")[0])
+                y = int(location.split(",")[1])
+                if x > 3 or x < 1 or y < 1 or y > 3:
+                    raise Exception() 
+            except:
+                print "\nError! Enter integers between 1 and 3\n"
+                continue
             drawX(x, y)
-            gIsPlayerOneChance = False
+            isPlayerOneChance = False
         else:
-            print "Player 1's Turn."
+            print "Player 2's Turn."
             location = raw_input("Enter location To Place O e.g: 1, 1: ")
             if location == "end":
                 break
-            x = int(location.split(",")[0])
-            y = int(location.split(",")[1])
+            try:
+                x = int(location.split(",")[0])
+                y = int(location.split(",")[1])
+                if x > 3 or x < 1 or y < 1 or y > 3:
+                    raise Exception() 
+            except:
+                print "\nError! Enter integers between 1 and 3\n"
+                continue
             drawO(x, y)
-            gIsPlayerOneChance = True
+            isPlayerOneChance = True
         printBoard()
     print "\nGame Over!"
     playAgain = raw_input("Play again y/n?: ")
