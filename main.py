@@ -73,6 +73,7 @@ def playGame():
     isPlayerOneChance = True
     initializeBoards(3 * (CELL_SIZE + 1) + 1)
     printBoard()
+    moves = 0
     while(True):
         if (isPlayerOneChance == True):
             print "Player 1's Turn."
@@ -108,12 +109,15 @@ def playGame():
                 print "\nTry another spot.\n"
                 continue
             isPlayerOneChance = True
+        moves += 1
         printBoard()
         if (checkWinner() == True):
             if isPlayerOneChance == False:
                 print "\n\nPlayer 1 is the winner!\n"
             else:
                 print "\n\nPlayer 2 is the winner!\n"
+            break
+        if (moves == 9):
             break
     print "\nGame Over!\n"
     playAgain = raw_input("Play again y/n?: ")
