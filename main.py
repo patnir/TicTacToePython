@@ -4,6 +4,7 @@ Created on Sun Jul 17 12:47:23 2016
 
 @author: Rahul Patni
 """
+import os
 import sys
 
 # Tic Tac Toe
@@ -11,13 +12,16 @@ import sys
 CELL_SIZE = 7
 
 gStatus = []
-
 gBoard = []
 
-def initializeBoard(dim):
+def clearBoards():
+    del gBoard[:]
+    del gStatus[:]
+    return
+
+def initializeBoards(dim):
     [gBoard.append([' '] * dim) for num in range(dim)]
     [gStatus.append([-1] * 3) for num in range(3)]
-    print gStatus
     length = len(gBoard)
     for i in range(length):
         if i % (CELL_SIZE + 1) == 0:
@@ -65,8 +69,9 @@ def drawO(row, col):
     return True
     
 def playGame():
+    os.system('cls')
     isPlayerOneChance = True
-    initializeBoard(3 * (CELL_SIZE + 1) + 1)
+    initializeBoards(3 * (CELL_SIZE + 1) + 1)
     printBoard()
     while(True):
         if (isPlayerOneChance == True):
@@ -107,7 +112,9 @@ def playGame():
     print "\nGame Over!"
     playAgain = raw_input("Play again y/n?: ")
     if (playAgain == "y"):
+        clearBoards()
         playGame()
+    
     
 def main():
     playGame()
