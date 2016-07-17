@@ -11,6 +11,21 @@ import sys
 CELL_SIZE = 3
 
 def drawBoard():
+    length = 3 * (CELL_SIZE + 1) + 1
+    for i in range(length):
+        if i % (CELL_SIZE + 1) == 0:
+            for j in range(length):
+                if j % (CELL_SIZE + 1) == 0:
+                    sys.stdout.write(" ")
+                else:
+                    sys.stdout.write("-")
+        else:
+            for j in range(length):
+                if j % (CELL_SIZE + 1) == 0:
+                    sys.stdout.write("|")
+                else:
+                    sys.stdout.write(" ")
+        sys.stdout.write("\n")
     return 
     
 def drawX(x, y):
@@ -39,7 +54,7 @@ def drawO(x, y):
     
 def main():
     drawBoard()
-    drawO(0,0)
+    #drawO(0,0)
     
 if __name__ == "__main__":
     main()
