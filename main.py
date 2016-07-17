@@ -53,7 +53,7 @@ def drawX(row, col):
                 gBoard[i + yOffset][j + xOffset] = "+"
             elif i == CELL_SIZE - j - 1:
                 gBoard[i + yOffset][j + xOffset] = "+"
-    gStatus[row - 1][col - 1] = 0
+    gStatus[row - 1][col - 1] = 1
     return True
 
 def drawO(row, col):
@@ -109,12 +109,36 @@ def playGame():
                 continue
             isPlayerOneChance = True
         printBoard()
-    print "\nGame Over!"
+        if (checkWinner() == True):
+            if isPlayerOneChance == False:
+                print "\n\nPlayer 1 is the winner!\n"
+            else:
+                print "\n\nPlayer 2 is the winner!\n"
+            break
+    print "\nGame Over!\n"
     playAgain = raw_input("Play again y/n?: ")
     if (playAgain == "y"):
         clearBoards()
         playGame()
-    
+
+def checkWinner():
+    for i in range(len(gStatus)):
+        row = gStatus[i][0]
+        col = gStatus[0][i]
+        rowDifference = 0
+        colDifference = 0
+        for j in range(0, len(gStatus)):
+            if row != gStatus[i][j]:
+                rowDifference += 1
+            if col != gStatus[j][i]:
+                colDifference += 1
+        if rowDifference == 0 and row != -1:
+            print "row"
+            return True
+        if colDifference == 0 and col != -1:
+            print "col"
+            return True
+    return False
     
 def main():
     playGame()
