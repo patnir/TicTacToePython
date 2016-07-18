@@ -9,7 +9,7 @@ import sys
 
 # Tic Tac Toe
 
-CELL_SIZE = 7
+CELL_SIZE = 6
 
 gStatus = []
 gBoard = []
@@ -47,11 +47,7 @@ def drawX(row, col):
         return False
     for i in range(CELL_SIZE):
         for j in range(CELL_SIZE):
-            if (i == 0 or i == CELL_SIZE - 1) and (j == 0 or j == CELL_SIZE - 1):
-                gBoard[i + yOffset][j + xOffset] = "+"
-            elif (i == j):
-                gBoard[i + yOffset][j + xOffset] = "+"
-            elif i == CELL_SIZE - j - 1:
+            if i == j or i == CELL_SIZE - j - 1:
                 gBoard[i + yOffset][j + xOffset] = "+"
     gStatus[row - 1][col - 1] = 1
     return True
@@ -126,6 +122,10 @@ def playGame():
         playGame()
 
 def checkWinner():
+    diag1 = gStatus[0][0]
+    diag2 = gStatus[len(gStatus) - 1][0]
+    diag1Difference = 0
+    diag2Difference = 0
     for i in range(len(gStatus)):
         row = gStatus[i][0]
         col = gStatus[0][i]
@@ -136,12 +136,22 @@ def checkWinner():
                 rowDifference += 1
             if col != gStatus[j][i]:
                 colDifference += 1
+            if i == j and diag1 != gStatus[i][j]:
+                    diag1Difference += 1
+            if i == 2 - j and diag2 != gStatus[i][j]:
+                    diag2Difference += 1
         if rowDifference == 0 and row != -1:
             print "row"
             return True
         if colDifference == 0 and col != -1:
             print "col"
             return True
+    if diag1Difference == 0 and diag1 != -1:
+            print "diag1"
+            return True
+    if diag2Difference == 0 and diag2 != -1:
+        print "diag2"
+        return True
     return False
     
 def main():
