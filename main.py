@@ -14,11 +14,6 @@ CELL_SIZE = 6
 gStatus = []
 gBoard = []
 
-def clearBoards():
-    del gBoard[:]
-    del gStatus[:]
-    return
-
 def initializeBoards(dim):
     [gBoard.append([' '] * dim) for num in range(dim)]
     [gStatus.append([-1] * 3) for num in range(3)]
@@ -33,6 +28,11 @@ def initializeBoards(dim):
                 if j % (CELL_SIZE + 1) == 0:
                     gBoard[i][j] = "|"
     return gBoard 
+    
+def clearBoards():
+    del gBoard[:]
+    del gStatus[:]
+    return
     
 def printBoard():
     for i in range(len(gBoard)):
