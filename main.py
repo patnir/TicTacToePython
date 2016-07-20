@@ -9,7 +9,7 @@ import sys
 
 # Tic Tac Toe
 
-CELL_SIZE = 6
+CELL_SIZE = 5
 
 gStatus = []
 gBoard = []
@@ -64,51 +64,44 @@ def drawO(row, col):
     gStatus[row - 1][col - 1] = 0
     return True
     
+def drawSymbol(row, col, symbol):
+    if (symbol == "X"):
+        return drawX(row, col)
+    return drawO(row, col)
+    
 def playGame():
     os.system('cls')
-    isPlayerOneChance = True
+    currentPlayer = "X"
     initializeBoards(3 * (CELL_SIZE + 1) + 1)
     printBoard()
     moves = 0
     while(True):
-        if (isPlayerOneChance == True):
+        if currentPlayer == "X":
             print "Player 1's Turn."
-            location = raw_input("Enter location To Place X (row, col): ")
-            if location == "end":
-                break
-            try:
-                row = int(location.split(",")[0])
-                col = int(location.split(",")[1])
-                if row > 3 or row < 1 or col < 1 or col > 3:
-                    raise Exception() 
-            except:
-                print "\nError! Enter integers between 1 and 3\n"
-                continue
-            if drawX(row, col) == False:
-                print "\nTry another spot.\n"
-                continue
-            isPlayerOneChance = False
         else:
             print "Player 2's Turn."
-            location = raw_input("Enter location To Place O (row, col): 1, 1: ")
-            if location == "end":
-                break
-            try:
-                row = int(location.split(",")[0])
-                col = int(location.split(",")[1])
-                if row > 3 or row < 1 or col < 1 or col > 3:
-                    raise Exception() 
-            except:
-                print "\nError! Enter integers between 1 and 3\n"
-                continue
-            if drawO(row, col) == False:
-                print "\nTry another spot.\n"
-                continue
-            isPlayerOneChance = True
+        location = raw_input("Enter location To Place {} (row, col): ".format(currentPlayer))
+        if location == "end":
+            break
+        try:
+            row = int(location.split(",")[0])
+            col = int(location.split(",")[1])
+            if row > 3 or row < 1 or col < 1 or col > 3:
+                raise Exception() 
+        except:
+            print "\nError! Enter integers between 1 and 3\n"
+            continue
+        if drawSymbol(row, col, currentPlayer) == False:
+            print "\nTry another spot.\n"
+            continue
+        if currentPlayer == "O":
+            currentPlayer = "X"
+        else:
+            currentPlayer = "O"
         moves += 1
         printBoard()
         if (checkWinner() == True):
-            if isPlayerOneChance == False:
+            if currentPlayer == "O":
                 print "\n\nPlayer 1 is the winner!\n"
             else:
                 print "\n\nPlayer 2 is the winner!\n"
