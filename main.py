@@ -68,7 +68,23 @@ def drawSymbol(row, col, symbol):
     if (symbol == "X"):
         return drawX(row, col)
     return drawO(row, col)
-    
+
+def getInputs(currentPlayer):
+    location = raw_input("Enter location To Place {} (row, col): ".format(currentPlayer))
+    if location == "end":
+        return -1, -1
+    try:
+        row = int(location.split(",")[0])
+        col = int(location.split(",")[1])
+    except:
+        print "\nError! Enter integers between 1 and 3\n"
+        row, col = getInputs(currentPlayer)
+    if row > 3 or row < 1 or col < 1 or col > 3:
+        print "\nError! Enter integers between 1 and 3\n"
+        row, col = getInputs(currentPlayer)
+    return row, col
+#continue game function for condition
+
 def playGame():
     os.system('cls')
     currentPlayer = "X"
@@ -80,17 +96,9 @@ def playGame():
             print "Player 1's Turn."
         else:
             print "Player 2's Turn."
-        location = raw_input("Enter location To Place {} (row, col): ".format(currentPlayer))
-        if location == "end":
+        row, col = getInputs(currentPlayer)
+        if row == -1:
             break
-        try:
-            row = int(location.split(",")[0])
-            col = int(location.split(",")[1])
-            if row > 3 or row < 1 or col < 1 or col > 3:
-                raise Exception() 
-        except:
-            print "\nError! Enter integers between 1 and 3\n"
-            continue
         if drawSymbol(row, col, currentPlayer) == False:
             print "\nTry another spot.\n"
             continue
