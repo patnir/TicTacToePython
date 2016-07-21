@@ -64,26 +64,27 @@ def drawO(row, col):
     gStatus[row - 1][col - 1] = 0
     return True
     
-def drawSymbol(row, col, symbol):
+def drawSymbol(location, symbol):
     if (symbol == "X"):
-        return drawX(row, col)
-    return drawO(row, col)
+        return drawX(location[0], location[1])
+    return drawO(location[0], location[1])
 
-def getInputs(currentPlayer):
-    location = raw_input("Enter location To Place {} (row, col): ".format(currentPlayer))
-    if location == "end":
-        return -1, -1
+def getInputs(currentPlayer, location):
+    userInput = raw_input("Enter location To Place {} (row, col): ".format(currentPlayer))
+    if userInput == "end":
+        return False
     try:
-        row = int(location.split(",")[0])
-        col = int(location.split(",")[1])
+        row = int(userInput.split(",")[0])
+        col = int(userInput.split(",")[1])
     except:
         print "\nError! Enter integers between 1 and 3\n"
-        row, col = getInputs(currentPlayer)
+        return getInputs(currentPlayer, location)
     if row > 3 or row < 1 or col < 1 or col > 3:
         print "\nError! Enter integers between 1 and 3\n"
-        row, col = getInputs(currentPlayer)
-    return row, col
-#continue game function for condition
+        return getInputs(currentPlayer, location)
+    location[0] = row
+    location[1] = col
+    return True
 
 def playGame():
     os.system('cls')
@@ -91,33 +92,32 @@ def playGame():
     initializeBoards(3 * (CELL_SIZE + 1) + 1)
     printBoard()
     moves = 0
-    while(True):
+    location = [0, 0]
+    gameStatus = checkWinner()
+    while(gameStatus == False and moves <= 9):
         if currentPlayer == "X":
             print "Player 1's Turn."
         else:
             print "Player 2's Turn."
-        row, col = getInputs(currentPlayer)
-        if row == -1:
+        if getInputs(currentPlayer, location) == False:
             break
-        if drawSymbol(row, col, currentPlayer) == False:
+        if drawSymbol(location, currentPlayer) == False:
             print "\nTry another spot.\n"
-            continue
-        if currentPlayer == "O":
-            currentPlayer = "X"
         else:
-            currentPlayer = "O"
-        moves += 1
-        printBoard()
-        if (checkWinner() == True):
             if currentPlayer == "O":
-                print "\n\nPlayer 1 is the winner!\n"
+                currentPlayer = "X"
             else:
-                print "\n\nPlayer 2 is the winner!\n"
-            break
-        if (moves == 9):
-            break
-    print "\nGame Over!\n"
-    playAgain = raw_input("Play again y/n?: ")
+                currentPlayer = "O"
+        printBoard()
+        gameStatus = checkWinner()
+        moves += 1
+    print "\nGame Over!"
+    if (gameStatus == True):
+        if currentPlayer == "O":
+            print "\n\nPlayer 1 is the winner!"
+        else:
+            print "\n\nPlayer 2 is the winner!"
+    playAgain = raw_input("\nPlay again y/n?: ")
     if (playAgain == "y"):
         clearBoards()
         playGame()
@@ -142,16 +142,12 @@ def checkWinner():
             if i == 2 - j and diag2 != gStatus[i][j]:
                     diag2Difference += 1
         if rowDifference == 0 and row != -1:
-            print "row"
             return True
         if colDifference == 0 and col != -1:
-            print "col"
             return True
     if diag1Difference == 0 and diag1 != -1:
-            print "diag1"
-            return True
+        return True
     if diag2Difference == 0 and diag2 != -1:
-        print "diag2"
         return True
     return False
     
