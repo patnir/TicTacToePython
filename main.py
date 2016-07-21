@@ -4,17 +4,20 @@ Created on Sun Jul 17 12:47:23 2016
 
 @author: Rahul Patni
 """
-import os
-import sys
 
 # Tic Tac Toe
+
+import os
+import sys
+import random
 
 CELL_SIZE = 5
 
 gStatus = []
 gBoard = []
 
-def initializeBoards(dim):
+def initializeBoards():
+    dim = 3 * (CELL_SIZE + 1) + 1
     [gBoard.append([' '] * dim) for num in range(dim)]
     [gStatus.append([-1] * 3) for num in range(3)]
     length = len(gBoard)
@@ -39,44 +42,42 @@ def printBoard():
         for j in range(len(gBoard)):
             sys.stdout.write(gBoard[i][j]),
         sys.stdout.write("\n")
-
-def drawX(row, col):
-    xOffset = (col - 1) * (CELL_SIZE + 1) + 1
-    yOffset = (row - 1) * (CELL_SIZE + 1) + 1
-    if gStatus[row - 1][col - 1] != -1:
-        return False
-    for i in range(CELL_SIZE):
-        for j in range(CELL_SIZE):
-            if i == j or i == CELL_SIZE - j - 1:
-                gBoard[i + yOffset][j + xOffset] = "+"
-    gStatus[row - 1][col - 1] = 1
-    return True
-
-def drawO(row, col):
-    xOffset = (col - 1) * (CELL_SIZE + 1) + 1
-    yOffset = (row - 1) * (CELL_SIZE + 1) + 1
-    if gStatus[row - 1][col - 1] != -1:
-        return False
-    for i in range(CELL_SIZE):
-        for j in range(CELL_SIZE):
-            if i == 0 or i == CELL_SIZE - 1 or j == 0 or j == CELL_SIZE - 1:
-                gBoard[i + yOffset][j + xOffset] = "o"
-    gStatus[row - 1][col - 1] = 0
-    return True
     
 def drawSymbol(location, symbol):
+    row = location[0]
+    col = location[1]
+    xOffset = (col - 1) * (CELL_SIZE + 1) + 1
+    yOffset = (row - 1) * (CELL_SIZE + 1) + 1
+    if gStatus[row - 1][col - 1] != -1:
+        return False
     if (symbol == "X"):
-        return drawX(location[0], location[1])
-    return drawO(location[0], location[1])
+        for i in range(CELL_SIZE):
+            for j in range(CELL_SIZE):
+                if i == j or i == CELL_SIZE - j - 1:
+                    gBoard[i + yOffset][j + xOffset] = symbol
+        gStatus[row - 1][col - 1] = 1
+    else:
+        for i in range(CELL_SIZE):
+            for j in range(CELL_SIZE):
+                if i == 0 or i == CELL_SIZE - 1 or j == 0 or j == CELL_SIZE - 1:
+                    gBoard[i + yOffset][j + xOffset] = symbol
+        gStatus[row - 1][col - 1] = 0
+    return True
 
 def getInputs(currentPlayer, location):
+    if currentPlayer == "O":
+        play = playComputer()
+        location[0] = play[0]
+        location[1] = play[1]
+        return True
     userInput = raw_input("Enter location To Place {} (row, col): ".format(currentPlayer))
     if userInput == "end":
         return False
     try:
-        row = int(userInput.split(",")[0])
-        col = int(userInput.split(",")[1])
-    except:
+        parts = userInput.split(",")
+        row = int(parts[0])
+        col = int(parts[1])
+    except: 
         print "\nError! Enter integers between 1 and 3\n"
         return getInputs(currentPlayer, location)
     if row > 3 or row < 1 or col < 1 or col > 3:
@@ -85,46 +86,15 @@ def getInputs(currentPlayer, location):
     location[0] = row
     location[1] = col
     return True
-
-def playGame():
-    os.system('cls')
-    currentPlayer = "X"
-    initializeBoards(3 * (CELL_SIZE + 1) + 1)
-    printBoard()
-    moves = 0
-    location = [0, 0]
-    gameStatus = checkWinner()
-    while(gameStatus == False and moves <= 9):
-        if currentPlayer == "X":
-            print "Player 1's Turn."
-        else:
-            print "Player 2's Turn."
-        if getInputs(currentPlayer, location) == False:
-            break
-        if drawSymbol(location, currentPlayer) == False:
-            print "\nTry another spot.\n"
-        else:
-            if currentPlayer == "O":
-                currentPlayer = "X"
-            else:
-                currentPlayer = "O"
-        printBoard()
-        gameStatus = checkWinner()
-        moves += 1
-    print "\nGame Over!"
-    if (gameStatus == True):
-        if currentPlayer == "O":
-            print "\n\nPlayer 1 is the winner!"
-        else:
-            print "\n\nPlayer 2 is the winner!"
-    playAgain = raw_input("\nPlay again y/n?: ")
-    if (playAgain == "y"):
-        clearBoards()
-        playGame()
-
+  
+def playComputer():
+    row = random.randint(1, 3)
+    col = random.randint(1, 3)
+    return row, col
+  
 def checkWinner():
     diag1 = gStatus[0][0]
-    diag2 = gStatus[len(gStatus) - 1][0]
+    diag2 = gStatus[2][0]
     diag1Difference = 0
     diag2Difference = 0
     for i in range(len(gStatus)):
@@ -150,6 +120,42 @@ def checkWinner():
     if diag2Difference == 0 and diag2 != -1:
         return True
     return False
+
+def playGame():
+    os.system('cls')
+    currentPlayer = "X"
+    initializeBoards()
+    printBoard()
+    moves = 0
+    location = [0, 0]
+    gameStatus = checkWinner()
+    while(gameStatus == False and moves < 9):
+        if currentPlayer == "X":
+            print "Your Turn."
+        else:
+            print "Computer's Turn."
+        if getInputs(currentPlayer, location) == False:
+            break
+        if drawSymbol(location, currentPlayer) == False:
+            print "\nTry another spot.\n"
+        else:
+            moves += 1
+            if currentPlayer == "O":
+                currentPlayer = "X"
+            else:
+                currentPlayer = "O"
+        printBoard()
+        gameStatus = checkWinner()
+    print "\nGame Over!"
+    if (gameStatus == True):
+        if currentPlayer == "O":
+            print "\nPlayer 1 is the winner!"
+        else:
+            print "\nPlayer 2 is the winner!"
+    playAgain = raw_input("\nPlay again y/n?: ")
+    if (playAgain == "y"):
+        clearBoards()
+        playGame()
     
 def main():
     playGame()
