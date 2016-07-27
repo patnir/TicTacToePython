@@ -7,6 +7,8 @@ Created on Sun Jul 17 12:47:23 2016
 
 # Tic Tac Toe
 
+# Random computer AI
+
 import os
 import sys
 import random
